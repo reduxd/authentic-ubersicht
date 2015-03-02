@@ -6,7 +6,7 @@
 # forecast.io api key
 apiKey = ''
 
-# gps lat/long
+# gps 'lat,long'
 location = ''
 
 # degree units; 'c' for celsius, 'f' for fahrenheit
