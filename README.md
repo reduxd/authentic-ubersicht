@@ -8,7 +8,7 @@ The most honest weather app, on your desktop
 1. Download [Übersicht](http://tracesof.net/uebersicht/)
 2. Copy `authentic.widget` to your widgets folder.
 3. Add your [forecast.io api key](https://developer.forecast.io) to `authentic.coffee`.
-4. Add your location in latitude/longitude form to `authentic.coffee`.
+4. Add your location in 'latitude,longitude' form to `authentic.coffee`.
 
 ## Advanced
 
