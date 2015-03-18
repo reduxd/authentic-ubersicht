@@ -25,7 +25,11 @@ rate = 300000
 
 exclude = "minutely,hourly,alerts,flags"
 
+command: "echo {}"
 command: "curl -sS 'https://api.forecast.io/forecast/#{apiKey}/#{location}?units=si&exclude=#{exclude}'"
+
+makeCommand: (apiKey, location) ->
+  "curl -sS 'https://api.forecast.io/forecast/#{apiKey}/#{location}?units=auto&exclude=#{exclude}'"
 
 unit: unit,
 icon: icon,
@@ -48,6 +52,14 @@ render: (o) -> """
 		</h2>
 	</article>
 """
+
+afterRender: (domEl) ->
+  geolocation.getCurrentPosition (e) =>
+    coords     = e.position.coords
+    [lat, lon] = [coords.latitude, coords.longitude]
+    @command   = @makeCommand(@apiKey, "#{lat},#{lon}")
+
+    @refresh()
 
 update: (o, dom) ->
 	# parse command json
