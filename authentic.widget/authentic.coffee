@@ -26,7 +26,6 @@ rate = 300000
 exclude = "minutely,hourly,alerts,flags"
 
 command: "echo {}"
-command: "curl -sS 'https://api.forecast.io/forecast/#{apiKey}/#{location}?units=si&exclude=#{exclude}'"
 
 makeCommand: (apiKey, location) ->
   "curl -sS 'https://api.forecast.io/forecast/#{apiKey}/#{location}?units=auto&exclude=#{exclude}'"
