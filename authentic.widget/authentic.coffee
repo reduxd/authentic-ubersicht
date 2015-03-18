@@ -15,7 +15,7 @@ icon: 'white'
 # snippet above text; 'temp' or 'icon'
 snippet: 'icon'
 
-# refresh every 'x' minutes
+# refresh every '(60 * 1000)  * x' minutes
 refreshFrequency: (60 * 1000) * 10
 
 # ---------------------------- END CONFIG ----------------------------
