@@ -4,36 +4,28 @@
 # ------------------------------ CONFIG ------------------------------
 
 # forecast.io api key
-apiKey = ''
-
-# gps 'lat,long'
-location = ''
+apiKey: ''
 
 # degree units; 'c' for celsius, 'f' for fahrenheit
-unit = 'f'
+unit: 'c'
 
 # icon set; 'black', 'white', and 'blue' supported
-icon = 'white'
+icon: 'white'
 
 # snippet above text; 'temp' or 'icon'
-snippet = 'icon'
+snippet: 'icon'
 
-# refresh every 'x' milliseconds
-rate = 300000
+# refresh every 'x' minutes
+refreshFrequency: (60 * 1000) * 10
 
 # ---------------------------- END CONFIG ----------------------------
 
-exclude = "minutely,hourly,alerts,flags"
+exclude: "minutely,hourly,alerts,flags"
 
 command: "echo {}"
 
 makeCommand: (apiKey, location) ->
-  "curl -sS 'https://api.forecast.io/forecast/#{apiKey}/#{location}?units=si&exclude=#{exclude}'"
-
-unit: unit,
-icon: icon,
-snippet: snippet,
-refreshFrequency: rate,
+  "curl -sS 'https://api.forecast.io/forecast/#{apiKey}/#{location}?units=si&exclude=#{@exclude}'"
 
 render: (o) -> """
 	<article id="content">
@@ -64,6 +56,7 @@ update: (o, dom) ->
 	# parse command json
 	data = JSON.parse(o)
 
+	return unless data.currently?
 	# get current temp from json
 	t = data.currently.temperature
 
