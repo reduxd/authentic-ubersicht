@@ -540,7 +540,7 @@
             "nippy!"
          ],
          "title":"It's a|wee bit |nippy!",
-         "subline":"This is for you my scotthish friends.",
+         "subline":"This is for you my Scottish friends.",
          "min":-3,
          "max":6,
          "color":"#004A96"
@@ -550,7 +550,7 @@
             "frosty"
          ],
          "title":"It's|frosty|as fuck.",
-         "subline":"This is for you my scotthish friends.",
+         "subline":"This is for you my Scottish friends.",
          "max":0,
          "color":"#004A96"
       },
