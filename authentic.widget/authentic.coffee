@@ -18,6 +18,9 @@ snippet: 'icon'
 # refresh every '(60 * 1000)  * x' minutes
 refreshFrequency: (60 * 1000) * 10
 
+# fallback location in case geolocation fails
+fallbackLocation: {latitude: '', longitude: ''}
+
 # ---------------------------- END CONFIG ----------------------------
 
 exclude: "minutely,hourly,alerts,flags"
@@ -45,12 +48,29 @@ render: (o) -> """
 """
 
 afterRender: (domEl) ->
-  geolocation.getCurrentPosition (e) =>
-    coords     = e.position.coords
+
+  updateScreen = (coords) =>
+
     [lat, lon] = [coords.latitude, coords.longitude]
     @command   = @makeCommand(@apiKey, "#{lat},#{lon}")
-
     @refresh()
+  
+  # wait and check if geolocation was successful
+  geolocationSuccess = false
+
+  setTimeout =>
+
+    if !geolocationSuccess
+      # Geolocation failed
+      updateScreen(@fallbackLocation)
+
+  , 7000
+
+  geolocation.getCurrentPosition (e) =>
+    geolocationSuccess = true
+    coords     = e.position.coords
+    updateScreen(coords)
+
 
 update: (o, dom) ->
 	# parse command json
