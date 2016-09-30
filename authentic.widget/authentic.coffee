@@ -25,7 +25,7 @@ exclude: "minutely,hourly,alerts,flags"
 command: "echo {}"
 
 makeCommand: (apiKey, location) ->
-  "curl -sS 'https://api.forecast.io/forecast/#{apiKey}/#{location}?units=si&exclude=#{@exclude}'"
+  "curl -sS 'https://api.darksky.net/forecast/#{apiKey}/#{location}?units=si&exclude=#{@exclude}'"
 
 render: (o) -> """
 	<article id="content">
