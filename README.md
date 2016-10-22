@@ -18,7 +18,7 @@ Celsius and Fahrenheit units are provided in the widget. To adjust this, change 
 Three icon sets are provided with the widget: white, black, and blue. To adjust this, change the value of `icon` in `authentic.coffee`.
 
 ### Setting the Snippet
-The widget above the phrase can be changed between an icon and the temperature. To adjust this, change the value of `snippet` in `authentic.coffee`.
+The widget above the phrase can be changed between an icon, the temperature, or both. To adjust this, change the value of `showIcon` and `showTemp` in `authentic.coffee`.
 
 ### Setting the Refresh Rate
 By default, the widget will get new data every 5 minutes. To adjust this, change the value of `rate` in `authentic.coffee`. The value should be in milliseconds, so multiply the number of seconds by 1000. Note that forecast.io has a limit on how frequently you can send requests.

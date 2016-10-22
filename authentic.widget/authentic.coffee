@@ -12,8 +12,11 @@ unit: 'c'
 # icon set; 'black', 'white', and 'blue' supported
 icon: 'white'
 
-# snippet above text; 'temp' or 'icon'
-snippet: 'icon'
+# weather icon above text; true or false
+showIcon: true
+
+# temperature above text; true or false
+showTemp: false
 
 # refresh every '(60 * 1000)  * x' minutes
 refreshFrequency: (60 * 1000) * 10
@@ -66,15 +69,19 @@ update: (o, dom) ->
 
 	# snippet control
 
-	# icon dump from android app
-	if @snippet == 'icon'
-		$(dom).find('#snippet').html('<img src="authentic.widget/icon/' + @icon + '/' + s1 + '.png"></img>')
+	snippetContent = []
 
-	if @snippet == 'temp'
+	# icon dump from android app
+	if @showIcon
+		snippetContent.push "<img src='authentic.widget/icon/#{ @icon }/#{ s1 }.png'></img>"
+
+	if @showTemp
 		if @unit == 'f'
-			$(dom).find('#snippet').html(Math.round(t * 9 / 5 + 32) + ' °F')
+			snippetContent.push "#{ Math.round(t * 9 / 5 + 32) } °F"
 		else
-			$(dom).find('#snippet').html(Math.round(t) + ' °C')
+			snippetContent.push "#{ Math.round(t) } °C"
+
+	$(dom).find('#snippet').html snippetContent.join ''
 
 	# process condition data (2/2)
 	s1 = s1.replace(/(day)/g, "")
