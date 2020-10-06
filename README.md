@@ -7,7 +7,7 @@ The most honest weather app, on your desktop
 ## Installation
 1. Download [Übersicht](http://tracesof.net/uebersicht/)
 2. Copy `authentic.widget` to your widgets folder.
-3. Add your [forecast.io api key](https://developer.forecast.io) to `authentic.coffee`.
+3. Add your [OpenWeatherMap API key](https://openweathermap.org/api) to `authentic.coffee`.
 
 ## Advanced
 
@@ -24,6 +24,9 @@ The widget above the phrase can be changed between an icon, the temperature, or 
 By default, the widget will get new data every 5 minutes. To adjust this, change the value of `rate` in `authentic.coffee`. The value should be in milliseconds, so multiply the number of seconds by 1000. Note that forecast.io has a limit on how frequently you can send requests.
 
 ## Changelog
+
+### 10/06/20
+- Compatible with OpenWeatherMap API
 
 ### 03/17/15
 - Now requires Ubersicht v0.5 or higher
