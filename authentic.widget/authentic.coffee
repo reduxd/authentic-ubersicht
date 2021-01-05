@@ -1,13 +1,14 @@
 # Authentic Weather for Übersicht
 # reduxd, 2015
+# fixed by jeffzma2000, 2020
 
 # ------------------------------ CONFIG ------------------------------
 
-# forecast.io api key
+# OpenWeatherMap API
 apiKey: ''
 
-# degree units; 'c' for celsius, 'f' for fahrenheit
-unit: 'c'
+# degree units; 'metric' for celsius, 'imperial' for fahrenheit
+unit: 'imperial'
 
 # icon set; 'black', 'white', and 'blue' supported
 icon: 'white'
@@ -16,13 +17,10 @@ icon: 'white'
 showIcon: true
 
 # temperature above text; true or false
-showTemp: false
+showTemp: true
 
 # refresh every '(60 * 1000)  * x' minutes
 refreshFrequency: (60 * 1000) * 10
-
-# fallback location in case geolocation fails
-fallbackLocation: {latitude: '', longitude: ''}
 
 # ---------------------------- END CONFIG ----------------------------
 
@@ -30,8 +28,8 @@ exclude: "minutely,hourly,alerts,flags"
 
 command: "echo {}"
 
-makeCommand: (apiKey, location) ->
-  "curl -sS 'https://api.darksky.net/forecast/#{apiKey}/#{location}?units=si&exclude=#{@exclude}'"
+makeCommand: (apiKey, lat, lon) ->
+  "curl -sS 'api.openweathermap.org/data/2.5/weather?lat=#{lat}&lon=#{lon}&units=metric&APPID=#{apiKey}'"
 
 render: (o) -> """
 	<article id="content">
@@ -51,41 +49,23 @@ render: (o) -> """
 """
 
 afterRender: (domEl) ->
-
-  updateScreen = (coords) =>
-
-    [lat, lon] = [coords.latitude, coords.longitude]
-    @command   = @makeCommand(@apiKey, "#{lat},#{lon}")
-    @refresh()
-  
-  # wait and check if geolocation was successful
-  geolocationSuccess = false
-
-  setTimeout =>
-
-    if !geolocationSuccess
-      # Geolocation failed
-      updateScreen(@fallbackLocation)
-
-  , 7000
-
   geolocation.getCurrentPosition (e) =>
-    geolocationSuccess = true
     coords     = e.position.coords
-    updateScreen(coords)
+    [lat, lon] = [coords.latitude, coords.longitude]
+    @command   = @makeCommand(@apiKey, lat, lon)
 
+    @refresh()
 
 update: (o, dom) ->
 	# parse command json
 	data = JSON.parse(o)
 
-	return unless data.currently?
+	return unless data.main?
 	# get current temp from json
-	t = data.currently.temperature
+	t = data.main.temp
 
 	# process condition data (1/2)
-	s1 = data.currently.icon
-	s1 = s1.replace(/-/g, "_")
+	s1 = data.weather[0].icon
 
 	# snippet control
 
@@ -93,24 +73,21 @@ update: (o, dom) ->
 
 	# icon dump from android app
 	if @showIcon
-		snippetContent.push "<img src='authentic.widget/icon/#{ @icon }/#{ s1 }.png'></img>"
+		snippetContent.push "<img src='/authentic.widget/icon/#{ @icon }/#{ s1 }.png'></img>"
 
 	if @showTemp
-		if @unit == 'f'
+		if @unit == 'imperial'
 			snippetContent.push "#{ Math.round(t * 9 / 5 + 32) } °F"
-		else
+		else if @unit == 'metric'
 			snippetContent.push "#{ Math.round(t) } °C"
+		else
+			snippetContent.push "#{ Math.round(t) } °K"
 
 	$(dom).find('#snippet').html snippetContent.join ''
 
-	# process condition data (2/2)
-	s1 = s1.replace(/(day)/g, "")
-	s1 = s1.replace(/(night)/g, "")
-	s1 = s1.replace(/_/g, " ")
-	s1 = s1.trim()
-
+	condition  = data.weather.main
 	# get relevant phrase
-	@parseStatus(s1, t, dom)
+	@parseStatus(condition, t, dom)
 
 # phrases dump from android app
 parseStatus: (summary, temperature, dom) ->
@@ -180,8 +157,8 @@ parseStatus: (summary, temperature, dom) ->
 # adapted from authenticweather.com
 style: """
 	width 20%
-	bottom 1%
-	left 1%
+	bottom 20%
+	left 5%
 	font-family 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, 'Open Sans', sans-serif
 	font-smooth always
 	color #ffffff
@@ -192,6 +169,7 @@ style: """
 
 		img
 			max-width 100px
+			padding-right 5%
 
 	h1
 		font-size 3.3em
